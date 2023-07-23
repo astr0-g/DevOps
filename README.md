@@ -139,7 +139,7 @@ Inspect Container Details: To retrieve detailed information about the container,
 sudo docker inspect 2ff3746e3305
 ```
 
-## docker-ubuntu
+## github-ubuntu
 ```
 ssh-keygen -t ed25519 -C "example@email.com"
 ```
