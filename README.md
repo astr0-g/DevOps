@@ -261,3 +261,12 @@ user = User.objects.get(email='')
 user.set_password('')
 user.save()
 ```
+
+```
+find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+```
+
+```
+find . -path "*/__pycache__/*.pyc"  -delete
+```
+
