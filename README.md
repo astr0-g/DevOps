@@ -248,3 +248,16 @@ If the verification is successful, Certbot will ask how you'd like to configure 
 ```
 sudo certbot renew --dry-run
 ```
+
+
+Django change password:
+
+```
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+user = User.objects.get(email='')
+
+user.set_password('')
+user.save()
+```
