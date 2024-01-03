@@ -8,6 +8,7 @@
     <li><a href="#github-ubuntu">github ssh ubuntu</a></li>
     <li><a href="#nginx-ubuntu">nginx ubuntu</a></li>
     <li><a href="#lets-encrypt-ubuntu">let's encrypt ubuntu</a></li>
+    <li><a href="#amqp">amqp node sync</a></li>
   </ol>
 </details>
 
@@ -293,3 +294,49 @@ find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
 find . -path "*/__pycache__/*.pyc"  -delete
 ```
 
+## amqp
+
+Install from docker:
+
+```
+docker pull rabbitmq:management
+```
+
+```
+docker run -d --hostname rabbit_host1 --name rabbitmq1 -p 15672:15672 -p 5672:5672 -e RABBITMQ_ERLANG_COOKIE='rabbitmq_cookie' --restart always rabbitmq:management
+#docker run -d --hostname rabbit_host2 --name rabbitmq2 -p 5673:5672 --link rabbitmq1:rabbit_host1 -e RABBITMQ_ERLANG_COOKIE='rabbitmq_cookie' --restart always rabbitmq:management
+#docker run -d --hostname rabbit_host3 --name rabbitmq3 -p 5674:5672 --link rabbitmq1:rabbit_host1 --link rabbitmq2:rabbit_host2 -e RABBITMQ_ERLANG_COOKIE='rabbitmq_cookie' --restart always rabbitmq:management
+docker run -d --hostname rabbit_host4 --name rabbitmq4 -p 5675:5672 --link rabbitmq1:rabbit_host1 --link rabbitmq2:rabbit_host2 --link rabbitmq3:rabbit_host3 -e RABBITMQ_ERLANG_COOKIE='rabbitmq_cookie' --restart always rabbitmq:management
+```
+
+## redis
+
+Create cluster:
+
+```
+redis-cli --cluster create <node1-ip>:6379 <node2-ip>:6379 <node3-ip>:6379 --cluster-replicas 0 -a your_redis_password
+```
+
+Add new server to cluster:
+
+```
+redis-cli --cluster add-node NEW_NODE_IP:6379 EXISTING_NODE_IP:6379
+```
+
+Move hash shard
+
+```
+redis-cli --cluster reshard
+```
+
+check cluster node
+
+```
+redis-cli -h ip -p 6379 -a password CLUSTER NODES
+```
+
+check health
+
+```
+redis-cli -a pass cluster info
+```
