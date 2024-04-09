@@ -230,7 +230,8 @@ sudo nginx -t
 sudo systemctl restart nginx
 ```
 
-#haproxy-ubuntu
+## haproxy-ubuntu
+
 Install HAProxy: Update your package list and install HAProxy. Ubuntu's default repositories provide HAProxy, but if you need a specific version, you might have to add a dedicated PPA.
 ```
 sudo apt update
