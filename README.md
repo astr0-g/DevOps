@@ -7,6 +7,7 @@
     <li><a href="#docker-ubuntu">docker ubuntu</a></li>
     <li><a href="#github-ubuntu">github ssh ubuntu</a></li>
     <li><a href="#nginx-ubuntu">nginx ubuntu</a></li>
+    <li><a href="#haproxy-ubuntu">haproxy ubuntu</a></li>
     <li><a href="#lets-encrypt-ubuntu">let's encrypt ubuntu</a></li>
     <li><a href="#amqp">amqp node sync</a></li>
   </ol>
@@ -227,6 +228,54 @@ sudo nginx -t
 
 ```
 sudo systemctl restart nginx
+```
+
+#haproxy-ubuntu
+Install HAProxy: Update your package list and install HAProxy. Ubuntu's default repositories provide HAProxy, but if you need a specific version, you might have to add a dedicated PPA.
+```
+sudo apt update
+sudo apt install haproxy
+```
+
+If you require a specific version, like 2.6, you can use a PPA:
+```
+sudo add-apt-repository ppa:vbernat/haproxy-2.6 -y
+sudo apt update
+sudo apt install -y haproxy=2.6.*
+```
+
+Configure HAProxy:
+```
+vim /etc/haproxy/haproxy.cfg
+```
+or
+```
+nano /etc/haproxy/haproxy.cfg
+```
+
+Example seeting:
+```
+# Frontend for RabbitMQ's management interface
+frontend rabbitmq_mgmt_frontend
+    bind *:15672
+    default_backend rabbitmq_mgmt_backend
+
+# Backend for RabbitMQ's management interface
+backend rabbitmq_mgmt_backend
+    mode http
+    option forwardfor
+    server rabbitmq1 <your-rabbitmq-server-ip>:15672 check
+
+# Frontend for RabbitMQ's AMQP service
+frontend rabbitmq_amqp_frontend
+    bind *:5672
+    default_backend rabbitmq_amqp_backend
+
+# Backend for RabbitMQ's AMQP service
+backend rabbitmq_amqp_backend
+    mode tcp
+    option tcplog
+    server rabbitmq1 <your-rabbitmq-server-ip>:5672 check
 ```
 
 ## lets-encrypt-ubuntu
