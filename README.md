@@ -279,6 +279,13 @@ backend rabbitmq_amqp_backend
     server rabbitmq1 <your-rabbitmq-server-ip>:5672 check
 ```
 
+restart and enable
+```
+sudo systemctl restart haproxy
+sudo systemctl enable haproxy
+```
+
+
 ## lets-encrypt-ubuntu
 
 First, make sure snapd is installed and up to date:
