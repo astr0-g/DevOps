@@ -230,6 +230,18 @@ sudo nginx -t
 sudo systemctl restart nginx
 ```
 
+Enable Nginx auto-start when reboot
+
+```
+sudo systemctl enable nginx
+```
+
+to verify
+
+```
+sudo systemctl is-enabled nginx
+```
+
 ## haproxy-ubuntu
 
 Install HAProxy: Update your package list and install HAProxy. Ubuntu's default repositories provide HAProxy, but if you need a specific version, you might have to add a dedicated PPA.
