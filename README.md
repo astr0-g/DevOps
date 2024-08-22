@@ -10,6 +10,7 @@
     <li><a href="#haproxy-ubuntu">haproxy ubuntu</a></li>
     <li><a href="#lets-encrypt-ubuntu">let's encrypt ubuntu</a></li>
     <li><a href="#amqp">amqp node sync</a></li>
+    <li><a href="#redis">redis</a></li>
   </ol>
 </details>
 
