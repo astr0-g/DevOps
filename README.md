@@ -379,6 +379,15 @@ docker run -d --hostname rabbit_host4 --name rabbitmq4 -p 5675:5672 --link rabbi
 ```
 
 ## redis
+Start Redis:
+```
+docker run --name redis-7.2.5 -d \
+  -e REDIS_PASSWORD=yourpassword \
+  --restart always \
+  -p 6379:6379 \
+  redis:7.2.5 \
+  redis-server --requirepass yourpassword
+```
 
 Create cluster:
 
