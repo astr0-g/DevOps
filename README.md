@@ -419,3 +419,9 @@ check health
 ```
 redis-cli -a pass cluster info
 ```
+
+
+# postgres
+```
+docker run --name my_postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5555:5432 -d postgres:16.2
+```
