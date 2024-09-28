@@ -1,4 +1,4 @@
-﻿# DevOps
+# DevOps
 
 <details>
   <summary>Table of Contents</summary>
@@ -10,7 +10,8 @@
     <li><a href="#haproxy-ubuntu">haproxy ubuntu</a></li>
     <li><a href="#lets-encrypt-ubuntu">let's encrypt ubuntu</a></li>
     <li><a href="#amqp">amqp node sync</a></li>
-    <li><a href="#redis">redis</a></li>
+    <li><a href="#redis">redis</a>
+    <li><a href="#postgres">postgres</a></li>
   </ol>
 </details>
 
