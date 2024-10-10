@@ -424,5 +424,11 @@ redis-cli -a pass cluster info
 
 # postgres
 ```
-docker run --name my_postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5555:5432 -d postgres:16.2
+docker run --name my_postgres \
+    -e POSTGRES_USER=myuser \
+    -e POSTGRES_PASSWORD=mysecretpassword \
+    -p 1555:5432 \
+    -v my_postgres_data:/var/lib/postgresql/data \
+    --restart always \
+    -d postgres:16.2
 ```
