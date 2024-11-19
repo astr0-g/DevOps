@@ -37,6 +37,11 @@ sudo apt-get install nodejs -y
 node --version
 ```
 
+improvement
+```
+sudo apt-get install build-essential
+```
+
 ## docker-ubuntu
 
 Update the apt package index:
