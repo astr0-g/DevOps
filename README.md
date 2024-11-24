@@ -428,6 +428,7 @@ redis-cli -a pass cluster info
 
 
 # postgres
+## Start PostgresSQL Docker Server
 ```
 docker run --name my_postgres \
     -e POSTGRES_USER=myuser \
@@ -437,3 +438,78 @@ docker run --name my_postgres \
     --restart always \
     -d postgres:16.2
 ```
+
+## Check PostgreSQL Docker Container ID or Name
+Run the following command to list all running containers:
+
+```bash
+docker ps
+```
+Find the `CONTAINER ID` or `NAME` of the PostgreSQL container, such as `postgres-container`.
+
+---
+
+## Access the Container's Interactive Terminal
+Run the following command to access the container:
+
+```bash
+docker exec -it my_postgres bash
+```
+
+Here, `my_postgres` is the container name or ID.
+
+---
+
+## Log in to the PostgreSQL Database
+Inside the container, use the `psql` tool to log in to PostgreSQL:
+
+```bash
+psql -U myuser
+```
+
+`-U myuser` specifies the default PostgreSQL superuser `myuser`. If you have another administrative user, replace it with the corresponding username.
+
+---
+
+## Execute SQL Commands to Create User and Set Permissions
+Follow the steps below to create a new user and set permissions:
+
+### Create a User
+
+```sql
+CREATE USER new_user WITH PASSWORD 'your_password';
+```
+
+### Set Permissions
+
+```sql
+GRANT CONNECT ON DATABASE your_database TO new_user;
+GRANT USAGE ON SCHEMA public TO new_user;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO new_user;
+```
+
+### (Optional) Grant Superuser Privileges
+If the new user requires superuser privileges:
+
+```sql
+ALTER USER new_user WITH SUPERUSER;
+```
+
+---
+
+## Exit PostgreSQL and the Container
+
+### Exit PostgreSQL
+
+```bash
+\q
+```
+
+### Exit the Container
+
+```bash
+exit
+```
+
+
+
