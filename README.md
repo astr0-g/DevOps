@@ -367,7 +367,20 @@ systemctl list-timers | grep certbot
 # Wed 2020-01-01 11:35:00 UTC 16h left      n/a                         n/a                snap.certbot.renew.timer       snap.certbot.renew.service
 ```
 
+Check all certificates
+```
+openssl x509 -in /etc/letsencrypt/live/api1.asksia.ai/fullchain.pem -noout -dates
+```
 
+Auto renew will only renew the verification within one month, if you want to force it to renew, and please restart nginx after doing so
+```
+sudo certbot renew --force-renewal --cert-name xxx.xxx.xxx
+sudo systemctl restart nginx
+```
+or if you want to re-applying a new certificate
+```
+sudo certbot certonly --force-renewal -d api1.asksia.ai
+```
 
 
 Django change password:
