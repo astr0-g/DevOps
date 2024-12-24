@@ -345,9 +345,29 @@ If the verification is successful, Certbot will ask how you'd like to configure 
 - Flexible: This setting will not redirect HTTP traffic.
   Certbot will automatically renew your certificates before they expire. You can test automatic renewal with this command:
 
+Check if the domain needs to renew
 ```
 sudo certbot renew --dry-run
 ```
+
+Start the timer
+```
+sudo systemctl enable snap.certbot.renew.timer
+sudo systemctl start snap.certbot.renew.timer
+```
+
+Check renew timer works or not
+```
+systemctl list-timers | grep certbot
+```
+
+Check again
+```
+systemctl list-timers | grep certbot
+# Wed 2020-01-01 11:35:00 UTC 16h left      n/a                         n/a                snap.certbot.renew.timer       snap.certbot.renew.service
+```
+
+
 
 
 Django change password:
