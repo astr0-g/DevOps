@@ -369,7 +369,7 @@ systemctl list-timers | grep certbot
 
 Check all certificates
 ```
-openssl x509 -in /etc/letsencrypt/live/api1.asksia.ai/fullchain.pem -noout -dates
+sudo certbot certificates
 ```
 
 Auto renew will only renew the verification within one month, if you want to force it to renew, and please restart nginx after doing so
