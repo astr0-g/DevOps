@@ -382,6 +382,165 @@ or if you want to re-applying a new certificate
 sudo certbot certonly --force-renewal -d api1.asksia.ai
 ```
 
+# DNS Verification way for let's encrypt
+
+```bash
+# Install Required Packages
+sudo apt update
+sudo apt install python3-certbot-dns-cloudflare jq
+```
+
+Cloudflare API Token Setup
+```markdown
+Get Cloudflare token:
+Login: https://dash.cloudflare.com/
+Navigate: Profile → API Tokens → Create Token
+
+Template: Custom token
+Permissions:
+- Zone:Zone:Read
+- Zone:DNS:Edit
+Zone Resources:
+- Include: Specific zone → your.domain.com
+
+Get Zone ID from domain dashboard (right sidebar)
+```
+
+Create Cloudflare Credentials File
+```bash
+sudo nano /etc/letsencrypt/cloudflare.ini
+```
+
+Content for cloudflare.ini
+```ini
+dns_cloudflare_api_token = YOUR_CLOUDFLARE_API_TOKEN
+```
+
+Set permissions
+```bash
+sudo chmod 600 /etc/letsencrypt/cloudflare.ini
+```
+
+Request Wildcard Certificate
+```bash
+sudo certbot certonly \
+  --dns-cloudflare \
+  --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini \
+  --cert-name example-wildcard \
+  -d example.com \
+  -d "*.example.com"
+```
+
+Verify New Certificate
+```bash
+sudo certbot certificates
+```
+
+Backup configurations
+```bash
+sudo cp -r /etc/nginx/sites-available /etc/nginx/sites-available.backup
+```
+
+Update certificate paths in all files
+```bash
+sudo sed -i 's|/etc/letsencrypt/live/example.com/|/etc/letsencrypt/live/example-wildcard/|g' /etc/nginx/sites-available/example.com
+```
+
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+```bash
+curl -I https://example.com
+```
+
+```bash
+sudo nano /etc/letsencrypt/renewal-hooks/pre/cleanup-dns.sh
+```
+
+```bash
+#!/bin/bash
+# Pre-renewal DNS cleanup script
+
+CF_API_TOKEN="YOUR_CLOUDFLARE_API_TOKEN"
+ZONE_ID="YOUR_ZONE_ID"
+
+echo "$(date): Starting DNS cleanup" >> /var/log/cert-cleanup.log
+
+# Clean up _acme-challenge TXT records
+curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records?type=TXT&name=_acme-challenge.example.com" \
+  -H "Authorization: Bearer $CF_API_TOKEN" \
+  -H "Content-Type: application/json" | \
+  jq -r '.result[].id' | \
+  while read record_id; do
+    if [ ! -z "$record_id" ]; then
+      curl -s -X DELETE "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records/$record_id" \
+        -H "Authorization: Bearer $CF_API_TOKEN" >> /var/log/cert-cleanup.log 2>&1
+      echo "$(date): Deleted record $record_id" >> /var/log/cert-cleanup.log
+    fi
+  done
+
+sleep 10
+echo "$(date): DNS cleanup completed" >> /var/log/cert-cleanup.log
+```
+
+If you haven't installed jq
+```bash
+sudo apt install jq
+```
+
+Set executable permissions
+```bash
+sudo chmod +x /etc/letsencrypt/renewal-hooks/pre/cleanup-dns.sh
+```
+
+Multi-Server Auto-Renewal Configuration - Check current timer
+```bash
+sudo systemctl list-timers certbot.timer
+sudo systemctl cat certbot.timer
+```
+
+```bash
+sudo systemctl edit certbot.timer
+```
+
+input the following for time, randomizedDelay for multiple server
+```ini
+[Timer]
+OnCalendar=
+OnCalendar=*-*-* 01:00:00
+RandomizedDelaySec=1800
+```
+
+Apply timer changes
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart certbot.timer
+sudo systemctl list-timers certbot.timer
+```
+
+Testing and Verification - Test automatic renewal
+```bash
+sudo certbot renew --dry-run
+```
+
+Check cleanup logs
+```bash
+tail -f /var/log/cert-cleanup.log
+```
+
+Verify certificate details
+```bash
+sudo certbot certificates
+openssl x509 -in /etc/letsencrypt/live/example-wildcard/fullchain.pem -noout -dates
+```
+
+Cleanup Old Certificate - After confirming everything works
+```bash
+sudo certbot delete --cert-name example.com
+```
+
 
 Django change password:
 
