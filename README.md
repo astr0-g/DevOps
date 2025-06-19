@@ -379,7 +379,7 @@ sudo systemctl restart nginx
 ```
 or if you want to re-applying a new certificate
 ```
-sudo certbot certonly --force-renewal -d api1.asksia.ai
+sudo certbot certonly --force-renewal -d example.domian
 ```
 
 # DNS Verification way for let's encrypt
